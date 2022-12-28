@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<head>
+  <title>Home</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <img src="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}" class="icon" />
+  <h3>Speech Bubble</h3>
+  <form action="/vocabulary" method="post">
+    <input type="submit" name="extract" value="Extract Keywords" />
+  </form><br><br>
+</body>
