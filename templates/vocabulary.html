@@ -47,7 +47,9 @@
     {% for i in range(0, length-1) %}
         {% if result[i] != '' %}
             <form class="speech">
-              <button type="submit" class="button-15" value="{{result[i]}}">{{result[i]}}</button>
+              <div class="grid-item">
+                <button type="submit" class="button-15" value="{{result[i]}}">{{result[i]}}</button>
+              </div>
             </form>
         {% endif %}
     {% endfor %}
