@@ -1,13 +1,9 @@
 import pyttsx3
+import time
 
 
 def text_to_speech(text):
-    """
-    Function to convert text to speech
-    :param text: text
-    :param gender: gender
-    :return: None
-    """
+
     voice_dict = {'Male': 0, 'Female': 1}
     code = voice_dict['Female']
     
@@ -24,6 +20,5 @@ def text_to_speech(text):
     engine.setProperty('voice', voices[code].id)
 
     engine.say(text)
-    engine.runAndWait()
-    if engine._inLoop:
-        engine.endLoop()
+    engine.runAndWait()  
+    engine.stop()  
