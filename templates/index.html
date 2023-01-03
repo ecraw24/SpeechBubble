@@ -9,39 +9,43 @@
   <script>
     // Only run what comes next *after* the page has loaded
     addEventListener("DOMContentLoaded", function() {
-      // Grab all of the elements with a class of command
-      // (which all of the buttons we just created have)
       var commandButtons = document.querySelectorAll(".button-15, .buttonImage");
       var speechDisplay = document.querySelector(".speechDisplayText"); 
       console.log(commandButtons)
       for (var i=0, l=commandButtons.length; i<l; i++) {
         var button = commandButtons[i];
-        // For each button, listen for the "click" event
         button.addEventListener("click", function(e) {
-          // When a click happens, stop the button
-          // from submitting our form (if we have one)
           e.preventDefault();
-    
           var clickedButton = e.target;
           var command = clickedButton.value; 
-          console.log(e.srcElement)
-          console.log(e)
-    
-          // Now we need to send the data to our server
-          // without reloading the page - this is the domain of
-          // AJAX (Asynchronous JavaScript And XML)
-          // We will create a new request object
-          // and set up a handler for the response
           var request = new XMLHttpRequest();
-          // We point the request at the appropriate command
           request.open("GET", "/" + command, true);
-          // and then we send it off
           request.send();
-          speechDisplay.textContent=command; 
+          speechDisplay.innerHTML=command; 
           console.log('js request send')
         });
       }
+    
+      recordButton = document.querySelector("#record"); 
+      recordButton.addEventListener("click", function(){
+        var counter = 15;
+        //recordButton.disabled = true; 
+        setInterval(function() {
+            counter--;
+            span = document.querySelector("#countdown");
+            if (counter >= 0) {
+              span.innerHTML = counter;
+            }
+            if (counter === 0) {
+              clearInterval(counter);
+              span.innerHTML = "--"; 
+              //recordButton.disabled = false;
+            }
+          }, 1000); 
+      });
     }, true);
+  
+  
     </script>
 </head>
 
@@ -50,16 +54,13 @@
     <img src="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}" class="icon" />
     <label style="font-size:xx-large; font-weight:bold">Speech Bubble</label>
   </div>
-  <div class="speechDisplayBar">
-    <p class="speechDisplayText"></p>
-  </div>
-  <div class="navBar">
-    <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" />
-  </div>
+
+
   <div class="mainContainer">
     <div class="record">
       <form action="/" method="post">
-        <button class="button-71" type="submit" name="record" value="Record">Record</button>
+        <button class="button-71" type="submit" id="record" name="record" value="Record" style="width: 100px; height: 100px; margin: auto"><img src="{{ url_for('static', filename='Recording.png') }}" style="pointer-events: none"/></button>
+        <span id="countdown" style="margin: auto">--</span>
       </form><br>
 
       <form action="/" method="post">
@@ -68,6 +69,12 @@
       </form><br><br>
     </div>
     <div class="boardContainer">
+      <div class="speechDisplayBar">
+        <span class="speechDisplayText"></span>
+      </div>
+      <div class="navBar">
+        <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" style="float:right; margin:0.5em"/>
+      </div>
       <div class="grid-container">
         {% for key, value in imgList.items() %}
           <form class="speech">
