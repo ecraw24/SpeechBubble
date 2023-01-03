@@ -6,18 +6,78 @@
     href="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}"
   />
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+  <script>
+    // Only run what comes next *after* the page has loaded
+    addEventListener("DOMContentLoaded", function() {
+      // Grab all of the elements with a class of command
+      // (which all of the buttons we just created have)
+      var commandButtons = document.querySelectorAll(".button-15, .buttonImage");
+      var speechDisplay = document.querySelector(".speechDisplayText"); 
+      console.log(commandButtons)
+      for (var i=0, l=commandButtons.length; i<l; i++) {
+        var button = commandButtons[i];
+        // For each button, listen for the "click" event
+        button.addEventListener("click", function(e) {
+          // When a click happens, stop the button
+          // from submitting our form (if we have one)
+          e.preventDefault();
+    
+          var clickedButton = e.target;
+          var command = clickedButton.value; 
+          console.log(e.srcElement)
+          console.log(e)
+    
+          // Now we need to send the data to our server
+          // without reloading the page - this is the domain of
+          // AJAX (Asynchronous JavaScript And XML)
+          // We will create a new request object
+          // and set up a handler for the response
+          var request = new XMLHttpRequest();
+          // We point the request at the appropriate command
+          request.open("GET", "/" + command, true);
+          // and then we send it off
+          request.send();
+          speechDisplay.textContent=command; 
+          console.log('js request send')
+        });
+      }
+    }, true);
+    </script>
 </head>
 
 <body>
-  <img src="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}" class="icon" />
-  <h3>Speech Bubble</h3>
+  <div class="header">
+    <img src="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}" class="icon" />
+    <label style="font-size:xx-large; font-weight:bold">Speech Bubble</label>
+  </div>
+  <div class="speechDisplayBar">
+    <p class="speechDisplayText"></p>
+  </div>
+  <div class="navBar">
+    <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" />
+  </div>
+  <div class="mainContainer">
+    <div class="record">
+      <form action="/" method="post">
+        <button class="button-71" type="submit" name="record" value="Record">Record</button>
+      </form><br>
 
-  <form action="/" method="post">
-    <button class="button-71" type="submit" name="record" value="Record">Record</button>
-  </form><br>
-  
-  <form action="/vocabulary" method="post">
-    <input type='text' name="transcript" value="{{transcript}}" />
-    <input type="submit" name="extract" value="Extract Keywords" />
-  </form><br><br>
+      <form action="/" method="post">
+        <textarea id='transcript' type='text' name="transcript" value="{{transcript}}" >{{transcript}}</textarea>
+        <input type="submit" name="extract" value="Extract Keywords" />
+      </form><br><br>
+    </div>
+    <div class="boardContainer">
+      <div class="grid-container">
+        {% for key, value in imgList.items() %}
+          <form class="speech">
+            <div class="grid-item">
+              <button type="submit" class="button-15" value="{{key}}">{{key}}<br><img src="{{value}}" class="buttonImage"/>
+              </button>
+            </div>
+          </form>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </body>
