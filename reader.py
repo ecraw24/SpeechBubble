@@ -2,10 +2,10 @@ import pyttsx3
 import time
 
 
-def text_to_speech(text):
+def text_to_speech(text, gender):
 
-    voice_dict = {'Male': 0, 'Female': 1}
-    code = voice_dict['Female']
+    voice_dict = {'male': 0, 'female': 1}
+    code = voice_dict[gender]
     
     engine = pyttsx3.init()
 

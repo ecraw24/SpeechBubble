@@ -6,85 +6,84 @@
     href="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}"
   />
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-  <script>
-    // Only run what comes next *after* the page has loaded
-    addEventListener("DOMContentLoaded", function() {
-      var commandButtons = document.querySelectorAll(".button-15, .buttonImage");
-      var speechDisplay = document.querySelector(".speechDisplayText"); 
-      console.log(commandButtons)
-      for (var i=0, l=commandButtons.length; i<l; i++) {
-        var button = commandButtons[i];
-        button.addEventListener("click", function(e) {
-          e.preventDefault();
-          var clickedButton = e.target;
-          var command = clickedButton.value; 
-          var request = new XMLHttpRequest();
-          request.open("GET", "/" + command, true);
-          request.send();
-          speechDisplay.innerHTML=command; 
-          console.log('js request send')
-        });
-      }
-    
-      recordButton = document.querySelector("#record"); 
-      recordButton.addEventListener("click", function(){
-        var counter = 15;
-        //recordButton.disabled = true; 
-        setInterval(function() {
-            counter--;
-            span = document.querySelector("#countdown");
-            if (counter >= 0) {
-              span.innerHTML = counter;
-            }
-            if (counter === 0) {
-              clearInterval(counter);
-              span.innerHTML = "--"; 
-              //recordButton.disabled = false;
-            }
-          }, 1000); 
-      });
-    }, true);
-  
-  
-    </script>
+  <script src="../static/scripts/index.js" type="text/javascript"></script>
 </head>
 
 <body>
+  
   <div class="header">
     <img src="{{ url_for('static', filename='Speech-Bubble-Icons.png') }}" class="icon" />
     <label style="font-size:xx-large; font-weight:bold">Speech Bubble</label>
   </div>
 
-
-  <div class="mainContainer">
+  <div class="mainContainer" id="mainContainer">
+    
+    <!-- RECORD -->
     <div class="record">
       <form action="/" method="post">
-        <button class="button-71" type="submit" id="record" name="record" value="Record" style="width: 100px; height: 100px; margin: auto"><img src="{{ url_for('static', filename='Recording.png') }}" style="pointer-events: none"/></button>
+        <button class="button-71" type="submit" id="record" name="record" value="Record" style="width: 100px; height: 100px; margin: auto">
+          <img src="{{ url_for('static', filename='Recording.png') }}" style="pointer-events: none"/>
+        </button>
         <span id="countdown" style="margin: auto">--</span>
       </form><br>
-
       <form action="/" method="post">
         <textarea id='transcript' type='text' name="transcript" value="{{transcript}}" >{{transcript}}</textarea>
-        <input type="submit" name="extract" value="Extract Keywords" />
+        <input id="submitMaxButtons" type="hidden" name="submitMaxButtons" value="0"  />
+        <input id="submitGradeLevel" type="hidden" name="submitGradeLevel" value="0" />
+        <input id="submitGender" type="hidden" name="submitGender" value="{{gender}}" />
+        <input id="submitExtractionType" type="hidden" name="submitExtractionType" value="keywords" />
+        <input type="submit" name="extract" value="Populate Board" />
       </form><br><br>
     </div>
+    
+    <!-- MAIN -->
     <div class="boardContainer">
       <div class="speechDisplayBar">
         <span class="speechDisplayText"></span>
       </div>
       <div class="navBar">
-        <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" style="float:right; margin:0.5em"/>
+        <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" onclick="openParameters()" style="float:right; margin:0.5em"/>
       </div>
-      <div class="grid-container">
+      
+      <!-- POPUP: gender, tokens, grade, extraction type -->
+      <div class="parametersContainer" id="parameters">
+        <div class="parametersForm">
+          <div class="formItem">
+            <label for="maxButtons">Max Buttons </label><br><input type="number" min="0" max="18" id="maxButtons"/>
+          </div>
+          <div class="formItem">
+            <label>Perceived Gender</label><br>
+            <input type="radio" id="female" name="gender" value="female" checked><label for="female">Female</label><br>
+            <input type="radio" id="male" name="gender" value="male"><label for="male">Male</label>
+          </div>
+          <div class="formItem">
+            <label>Extraction Method</label><br>
+            <input type="radio" id="verbatim" name="extraction" value="verbatim"onclick="toggleGradeLevel()"><label for="verbatim">Verbatim</label><br>
+            <input type="radio" id="keywords" name="extraction" value="keywords" onclick="toggleGradeLevel()" checked><label for="keywords">Keywords</label>
+          </div>
+          <div class="formItem">
+            <label for="gradeLevel">Grade Level </label><br><input type="number" id="gradeLevel" value="0" min="0" max="12" disabled/><br>
+            <input type="checkbox" id="autoGradeLevel" name="autoGradeLevel" onclick="toggleGradeLevel()" checked><label for="autoGradeLevel">Autocalculate</label>
+          </div>
+          <button type="button" class="button-71" id="closeParameters" onclick="closeParameters()">Save</button>
+        </div>
+      </div>
+
+      <!-- BOARD -->
+      <div class="grid-container" id="board">
         {% for key, value in imgList.items() %}
-          <form class="speech">
-            <div class="grid-item">
-              <button type="submit" class="button-15" value="{{key}}">{{key}}<br><img src="{{value}}" class="buttonImage"/>
-              </button>
-            </div>
-          </form>
+          <div class="grid-item">
+            <form >
+              <!-- <div class="grid-item"> -->
+                <button type="submit" class="button-15" value="{{key}}">{{key}}<br><img src="{{value}}" class="buttonImage"/>
+                </button>
+              <!-- </div> -->
+            </form>
+          </div>
         {% endfor %}
       </div>
     </div>
+    <!-- end Board -->
+
   </div>
 </body>
