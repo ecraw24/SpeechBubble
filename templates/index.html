@@ -23,16 +23,16 @@
       <form action="/" method="post">
         <button class="button-71" type="submit" id="record" name="record" value="Record" style="width: 100px; height: 100px; margin: auto">
           <img src="{{ url_for('static', filename='Recording.png') }}" style="pointer-events: none"/>
-        </button>
+        </button><br>
         <span id="countdown" style="margin: auto">--</span>
       </form><br>
       <form action="/" method="post">
-        <textarea id='transcript' type='text' name="transcript" value="{{transcript}}" >{{transcript}}</textarea>
+        <textarea id='transcript' type='text' name="transcript" value="{{transcript}}" required>{{transcript}}</textarea>
         <input id="submitMaxButtons" type="hidden" name="submitMaxButtons" value="0"  />
         <input id="submitGradeLevel" type="hidden" name="submitGradeLevel" value="0" />
         <input id="submitGender" type="hidden" name="submitGender" value="{{gender}}" />
-        <input id="submitExtractionType" type="hidden" name="submitExtractionType" value="keywords" />
-        <input type="submit" name="extract" value="Populate Board" />
+        <input id="submitExtractionType" type="hidden" name="submitExtractionType" value="keywords" /><br>
+        <input type="submit" name="extract" id="extract" value="Populate Board" /><br>
       </form><br><br>
     </div>
     
@@ -42,27 +42,27 @@
         <span class="speechDisplayText"></span>
       </div>
       <div class="navBar">
-        <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" onclick="openParameters()" style="float:right; margin:0.5em"/>
+        <img src="{{ url_for('static', filename='Settings.png') }}" class="icon" onclick="openParameters()" style="float:left; margin:0.5em"/>
       </div>
       
       <!-- POPUP: gender, tokens, grade, extraction type -->
       <div class="parametersContainer" id="parameters">
         <div class="parametersForm">
           <div class="formItem">
-            <label for="maxButtons">Max Buttons </label><br><input type="number" min="0" max="18" id="maxButtons"/>
+            <label for="maxButtons"><b>Max Buttons </b></label><br><input type="number" min="0" max="18" id="maxButtons" placeholder="18"/>
           </div>
           <div class="formItem">
-            <label>Perceived Gender</label><br>
+            <label><b>Perceived Gender</b></label><br>
             <input type="radio" id="female" name="gender" value="female" checked><label for="female">Female</label><br>
             <input type="radio" id="male" name="gender" value="male"><label for="male">Male</label>
           </div>
           <div class="formItem">
-            <label>Extraction Method</label><br>
-            <input type="radio" id="verbatim" name="extraction" value="verbatim"onclick="toggleGradeLevel()"><label for="verbatim">Verbatim</label><br>
+            <label><b>Extraction Method</b></label><br>
+            <input type="radio" id="verbatim" name="extraction" value="verbatim" onclick="toggleGradeLevel()"><label for="verbatim">Verbatim</label><br>
             <input type="radio" id="keywords" name="extraction" value="keywords" onclick="toggleGradeLevel()" checked><label for="keywords">Keywords</label>
           </div>
           <div class="formItem">
-            <label for="gradeLevel">Grade Level </label><br><input type="number" id="gradeLevel" value="0" min="0" max="12" disabled/><br>
+            <label for="gradeLevel"><b>Grade Level</b> </label><br><input type="number" id="gradeLevel" value="0" min="0" max="12" disabled/>
             <input type="checkbox" id="autoGradeLevel" name="autoGradeLevel" onclick="toggleGradeLevel()" checked><label for="autoGradeLevel">Autocalculate</label>
           </div>
           <button type="button" class="button-71" id="closeParameters" onclick="closeParameters()">Save</button>

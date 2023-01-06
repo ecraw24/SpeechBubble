@@ -4,7 +4,7 @@ addEventListener("DOMContentLoaded", function() {
     
     var grid = document.getElementById('board');
     grid.style.setProperty('--cols', Math.ceil(Math.sqrt(grid.children.length))*2);
-    grid.style.setProperty('--rows', Math.ceil(Math.sqrt(grid.children.length)));
+    grid.style.setProperty('--rows', Math.floor(Math.sqrt(grid.children.length)));
     console.log(Math.ceil(Math.sqrt(grid.children.length)));
     
     for (var i=0, l=commandButtons.length; i<l; i++) {
@@ -40,20 +40,22 @@ addEventListener("DOMContentLoaded", function() {
 
   function openParameters() {
     document.getElementById("parameters").style.display = "block";
-    document.getElementById("board").style.pointerEvents = "none";
-    document.getElementById("board").style.backdropFilter = "blur(10px)";
-    document.getElementById("record").style.pointerEvents = "none";
-    document.getElementById("record").style.backdropFilter = "blur(10px)";
-
+    var disableButtons = document.querySelectorAll(".button-15, textarea, #extract, #record");
+    for (var i=0, l=disableButtons.length; i<l; i++) {
+      var button = disableButtons[i];
+      button.disabled=true;
+    }
   }
   
   function closeParameters() {
     saveCurrentParameters(); 
     document.getElementById("parameters").style.display = "none";
-    document.getElementById("board").style.pointerEvents = "auto";
-    document.getElementById("board").style.backdropFilter = "none";
-    document.getElementById("record").style.pointerEvents = "auto";
-    document.getElementById("record").style.backdropFilter = "none";
+    var disableButtons = document.querySelectorAll(".button-15, textarea, #extract, #record");
+    for (var i=0, l=disableButtons.length; i<l; i++) {
+      var button = disableButtons[i];
+      button.disabled=false;
+    }
+
   }
 
   function saveCurrentParameters() {
@@ -65,12 +67,20 @@ addEventListener("DOMContentLoaded", function() {
   }
 
   function toggleGradeLevel() {
-    if (document.getElementById("autoGradeLevel").checked || document.getElementById("verbatim").checked) {
+    if (document.getElementById("verbatim").checked) {
       document.getElementById("gradeLevel").value='0'; 
-      document.getElementById("gradeLevel").disabled=true; 
+      document.getElementById("gradeLevel").disabled=true;
+      document.getElementById("autoGradeLevel").disabled=true; 
     } else {
-      document.getElementById("gradeLevel").disabled=false; 
+      document.getElementById("autoGradeLevel").disabled=false;
+      if (document.getElementById("autoGradeLevel").checked) {
+        document.getElementById("gradeLevel").value='0'; 
+        document.getElementById("gradeLevel").disabled=true; 
+      } else {
+        document.getElementById("gradeLevel").disabled=false;
+      }
     }
+
   }
 
 

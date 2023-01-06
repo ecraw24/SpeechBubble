@@ -7,6 +7,7 @@ import pydub
 import pocketsphinx
 from flask import Flask, redirect, render_template, request, url_for
 import speech_recognition as sr
+import pyttsx3
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -44,7 +45,7 @@ def index():
                         frequency_penalty=0.0,
                         presence_penalty=0.0, 
                     )
-                    prompt = "Extract keywords from this text: " + gradedText 
+                    prompt = "Extract keywords from this text: " + gradedText.choices[0].text.strip() 
                 else:
                     prompt = "Extract keywords from this text: " + request.form['transcript']
                 
@@ -58,13 +59,15 @@ def index():
                     presence_penalty=0.0, 
                 )
                 resultString = response.choices[0].text.strip()
+                print(resultString)
+                resultList = re.split(r"Keywords: |\n |[-.]+", resultString)
             elif (request.form['submitExtractionType']=="verbatim"):
                 resultString = request.form['transcript'].strip()
-            
-            resultList = re.split(r"Keywords: |[\b\W\b]+", resultString)
+                fullList = re.split(r"[\b\W\b]+", resultString)
+                resultList = fullList[:maxButtons]
             imgList = {}
             for result in resultList:
-                if result != '': 
+                if result != '' and result != ' ': 
                     imgResponse = openai.Image.create(
                         prompt=result,
                         n=1,

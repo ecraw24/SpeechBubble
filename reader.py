@@ -1,14 +1,14 @@
 import pyttsx3
 import time
-
+from queue import Queue
+from threading import Thread
 
 def text_to_speech(text, gender):
-
+ 
     voice_dict = {'male': 0, 'female': 1}
     code = voice_dict[gender]
     
     engine = pyttsx3.init()
-
     # Setting up voice rate
     engine.setProperty('rate', 125)
 
@@ -20,5 +20,6 @@ def text_to_speech(text, gender):
     engine.setProperty('voice', voices[code].id)
 
     engine.say(text)
-    engine.runAndWait()  
-    engine.stop()  
+    engine.runAndWait()
+    engine.connect('finished-utterance', onEnd)
+    engine.stop()
